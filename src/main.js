@@ -10,7 +10,7 @@ import 'muse-ui/dist/muse-ui.css'
 
 //自定义主题
 MuseUI.theme.add('my-theme-blue', {
-  primary: '#2B58F2',
+  primary: '#5276B0',
   secondary: '#5886F6',
   success: '#26D0AA',
   warning: '#ff9300'
