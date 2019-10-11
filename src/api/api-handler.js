@@ -1,7 +1,7 @@
 import { post, get } from './request'
 import base from './baseUrl'
 
-import SaleTeamListJson from '../mock/home/saleTeamList/list.json'
+import surveyTitle from '../mock/Index/surveyTitle.json'
 
 const baseUrl = base.url;
 const mockData = base.mockData;
@@ -35,13 +35,13 @@ export default {
   },
 
   /**
-   * 获取承销方列表数据
+   * 获取问卷调查列表数据
    *
    */
-  getSaleTeamList() {
+  getSurveyTitle() {
     const api = `${baseUrl}/?year=&month=`;
     if (mockData) {
-      return new Promise((resolve, reject) => { resolve(SaleTeamListJson) });
+      return new Promise((resolve, reject) => { resolve(surveyTitle) });
     }
     return get(api);
   },
