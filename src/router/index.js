@@ -30,6 +30,17 @@ const router = new Router({
       }
     },
     {
+      path: '/surveyDetail/:id',
+      name: 'surveyDetail',
+      // 需要登录才能进入的页面可以增加一个meta属性
+      meta: {
+        requireAuth: false
+      },
+      component: (resolve) => {
+        require(['components/surveyDetail'], resolve)
+      }
+    },
+    {
       name: '404',
       path: '/404',
       component: resolve => require(['components/notFound/404'], resolve),

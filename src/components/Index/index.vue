@@ -85,6 +85,18 @@ export default {
 
       this.clickLimit.timer = setTimeout(() => {
         console.log("goToSurveyDetailPage==>", id);
+        // this.$router.push({
+        //   path: "/surveyDetail",
+        //   query: {
+        //     id
+        //   }
+        // });
+        this.$router.push({
+          name: "surveyDetail",
+          params: {
+            id: id
+          }
+        });
       }, this.clickLimit.timeout);
     },
     refresh() {
@@ -119,10 +131,15 @@ export default {
     //获取的一页数据数量
     const dateNum =
       Math.ceil((document.documentElement.clientHeight - 54) / 58) + 1;
-    //数据请求
-    api.getSurveyTitle().then(response => {
-      console.log(response);
-      this.dataList = response;
+    //获取用户信息，保存到store中
+    api.getUserInfo().then(response => {
+      this.$store.commit("SET_USERINFO", response);
+      //数据请求
+      const userId = this.$store.state.userInfo;
+      api.getSurveyTitle(userId).then(response => {
+        console.log(response);
+        this.dataList = response;
+      });
     });
   }
 };
@@ -131,7 +148,7 @@ export default {
 <style scoped lang="less">
 .home {
   width: 100vw;
-  // height: 100vh;
+  min-height: 100vh;
   background-color: #f6f5fa;
 }
 .search {

@@ -6,7 +6,9 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     count: 12138,
-    nowTabs: ''
+    nowTabs: '',
+    token: "",
+    userInfo: {}
   },
   mutations: {
     addNum(state) {
@@ -16,7 +18,13 @@ const store = new Vuex.Store({
       // sessionStorage.setItem("nowTabs",nowTabsValue);
       state.nowTabs = nowTabsValue;
     },
-
+    SET_TOKEN(state, token) {
+      state.token = token;
+    },
+    SET_USERINFO(state, userInfo) {
+      sessionStorage.setItem("userId", userInfo.id);
+      state.userInfo = userInfo;
+    }
   }
 })
 
