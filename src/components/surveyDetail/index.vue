@@ -16,11 +16,7 @@
             <div class="select-control-group">
               <mu-flex class="select-control-row" v-for="element in item.content" :key="element.id">
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <mu-radio
-                  :value="element.id"
-                  v-model="radio.value1"
-                  :label="element.text"
-                ></mu-radio>
+                <mu-radio :value="element.id" v-model="radio.value1" :label="element.text"></mu-radio>
               </mu-flex>
             </div>
           </div>
@@ -167,8 +163,8 @@ export default {
 .shortAnswer-textArea {
   padding: 14px;
   border: 1px solid #ddd;
-  width: 94%;
-  margin: 14px 3%;
+  width: 94% !important;
+  margin: 14px 3% !important;
   font-size: 14px;
 }
 </style>

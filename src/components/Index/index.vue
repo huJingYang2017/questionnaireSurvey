@@ -125,7 +125,8 @@ export default {
     }
   },
   mounted: function() {
-    this.$refs["input"].focus();
+    //使搜索input获得焦点
+    // this.$refs["input"].focus();
   },
   created: function() {
     //获取的一页数据数量
