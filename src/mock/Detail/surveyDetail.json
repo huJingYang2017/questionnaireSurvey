@@ -7,7 +7,7 @@
     "questions": [
       {
         "id": "1212001",
-        "required": true,
+        "required": false,
         "type": "radio",
         "question": "你对本次更新是否感到满意",
         "content": [
