@@ -23,7 +23,12 @@
             <div class="select-control-group">
               <mu-flex class="select-control-row" v-for="element in item.content" :key="element.id">
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <mu-radio :value="element.id" v-model="item.result" :label="element.text"></mu-radio>
+                <mu-radio
+                  :value="element.id"
+                  v-model="item.result"
+                  :label="element.text"
+                  class="radio-color"
+                ></mu-radio>
               </mu-flex>
             </div>
           </div>
@@ -31,9 +36,7 @@
             <div class="question-title">
               <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
               {{index + 1}}、{{item.question}}
-              <span
-                style="font-weight:200;color: #b7a9a9;"
-              >「多选题」</span>
+              <span class="multiple-prompt">「多选题」</span>
             </div>
             <div class="select-control-group">
               <!-- Selects: {{checkbox.value1}} -->
@@ -51,7 +54,7 @@
                   :value="element.id"
                   v-model="item.result"
                   :label="element.text"
-                  style="font-size: 16px;"
+                  class="checkbox-color"
                 ></mu-checkbox>
               </mu-flex>
             </div>
@@ -77,11 +80,7 @@
         </mu-container>
       </div>
 
-      <div
-        v-if="index === (data.questions.length -1)"
-        style="padding: 12px 12px 48px 12px;"
-        @click="submitQuestion"
-      >
+      <div v-if="index === (data.questions.length -1)" class="bottom-btn" @click="submitQuestion">
         <div>
           <mu-container class="button-wrapper">
             <mu-flex justify-content="center" align-items="center">
@@ -145,16 +144,15 @@ export default {
       //   }
       // });
 
-      this.$vux.toast.show({
-        text: "获取数据失败",
-        type: "cancel",
-        time: 1000,
-        isShowMask: true,
-        position: "middle"
-      });
       console.log(response);
       if (response === undefined) {
-        console.log("1d5as1d5");
+        this.$vux.toast.show({
+          text: "获取数据失败",
+          type: "cancel",
+          time: 60000,
+          isShowMask: true,
+          position: "middle"
+        });
         return false;
       }
 
@@ -191,7 +189,13 @@ export default {
 .select-control-group {
   // margin-top: 16px;
   padding-bottom: 8px;
+  color: #93919252;
 }
+.checkbox-color {
+  font-size: 16px;
+  color: #93919252;
+}
+
 .button-wrapper {
   text-align: center;
   .mu-button {
@@ -237,10 +241,24 @@ export default {
   margin: 14px 3% !important;
   font-size: 14px;
 }
+.multiple-prompt {
+  font-weight: 200;
+  color: #b7a9a9;
+}
+.bottom-btn {
+  padding: 12px 12px 48px 12px;
+}
+.bottom-btn .mu-button {
+  height: 3em;
+  font-size: 16px;
+}
 </style>
 
 <style lang="less">
 .shortAnswer-textArea .mu-input-help {
   padding: 12px 0;
+}
+.select-control-group .mu-checkbox-checked {
+  color: #5276b0 !important;
 }
 </style>
