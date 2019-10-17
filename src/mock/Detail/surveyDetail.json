@@ -1,6 +1,6 @@
 [
   {
-    "id": "1212",
+    "id": "121200000",
     "title": "本次版本更新大调查",
     "status": false,
     "dateTime": "2019-08-15 10:35",
@@ -53,8 +53,7 @@
         "id": "1212003",
         "required": false,
         "type": "shortAnswer",
-        "question": "说说你对本次更新的看法",
-        "content": ""
+        "question": "说说你对本次更新的看法"
       },
       {
         "id": "1212004",

@@ -7,6 +7,9 @@ import router from './router'
 import store from './store'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
+import { ToastPlugin } from 'vux'
+Vue.use(ToastPlugin)
+
 
 //自定义主题
 MuseUI.theme.add('my-theme-blue', {

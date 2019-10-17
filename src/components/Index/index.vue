@@ -125,6 +125,8 @@ export default {
     }
   },
   mounted: function() {
+    // 隐藏 toast
+    this.$vux.toast.hide();
     //使搜索input获得焦点
     // this.$refs["input"].focus();
   },
@@ -159,7 +161,7 @@ export default {
   padding-left: 12px;
   position: fixed;
   width: 100%;
-  height: 54px;
+  height: 4.25em;
   z-index: 99;
 }
 .data-list {
@@ -174,7 +176,7 @@ export default {
 .search-input-item {
   border-radius: 50px;
   background-color: #f6f5fa;
-  padding: 4px 12px;
+  padding: 6px 12px;
   /* font-size: 15px; */
   color: #656262;
   /* font-weight: bold; */
@@ -191,8 +193,8 @@ export default {
   margin-top: 8px;
   padding: 0 16px;
   display: flex;
-
-  line-height: 48px;
+  // line-height: 48px;
+  line-height: 4em;
 }
 .list-item-title {
   width: 70%;
