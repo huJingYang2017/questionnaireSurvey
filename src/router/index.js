@@ -14,6 +14,9 @@ const router = new Router({
     {
       path: '/index',
       name: 'index',
+      meta: {
+        keepAlive: false
+      },
       component: (resolve) => {
         require(['components/Index'], resolve)
       }
@@ -23,7 +26,8 @@ const router = new Router({
       name: 'vux',
       // 需要登录才能进入的页面可以增加一个meta属性
       meta: {
-        requireAuth: false
+        requireAuth: false,
+        keepAlive: false
       },
       component: (resolve) => {
         require(['components/HelloWorld'], resolve)

@@ -133,7 +133,7 @@
       },
       {
         "id": "1212003",
-        "required": false,
+        "required": true,
         "type": "shortAnswer",
         "question": "说说你对本次更新的看法",
         "content": ""

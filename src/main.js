@@ -8,9 +8,10 @@ import store from './store'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
 import { ToastPlugin } from 'vux'
+import Helpers from 'muse-ui/lib/Helpers';
+
 Vue.use(ToastPlugin)
-
-
+Vue.use(Helpers);
 //自定义主题
 MuseUI.theme.add('my-theme-blue', {
   primary: '#5276B0',

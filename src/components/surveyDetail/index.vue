@@ -1,5 +1,5 @@
 <template>
-  <div class="survey-detail">
+  <div class="survey-detail" v-scroll="scroll">
     <div
       class="question-detail-title"
       v-if="(data.questions === undefined || data.questions.length === 0) && (data.id !== undefined)"
@@ -13,69 +13,117 @@
         <div class="questionnaire-title">{{data.title}}</div>
         <div class="questionnaire-dateTime">{{data.dateTime}}</div>
       </div>
-      <div class="question-item">
-        <mu-container>
-          <div v-if="item.type === 'radio'">
-            <div class="question-title">
-              <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
-              {{index + 1}}、{{item.question}}
+      <div style="padding-bottom: 8px;">
+        <mu-container style="padding-top: 8px;">
+          <!-- :id=`questio${data.dateTime}` -->
+          <div
+            v-if="item.type === 'radio'"
+            :id="gernerateId(item.id)"
+            class="question-item"
+            @click="setRequiredOption(item.id)"
+          >
+            <div
+              :class="(item.achieve === undefined || item.achieve) ? '':'question-required-border'"
+            >
+              <div class="question-title">
+                <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
+                {{index + 1}}、{{item.question}}
+              </div>
+              <div class="select-control-group">
+                <mu-flex
+                  class="select-control-row"
+                  v-for="element in item.content"
+                  :key="element.id"
+                >
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <mu-radio
+                    :value="element.id"
+                    v-model="item.result"
+                    :label="element.text"
+                    class="radio-color"
+                  ></mu-radio>
+                </mu-flex>
+              </div>
             </div>
-            <div class="select-control-group">
-              <mu-flex class="select-control-row" v-for="element in item.content" :key="element.id">
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <mu-radio
-                  :value="element.id"
-                  v-model="item.result"
-                  :label="element.text"
-                  class="radio-color"
-                ></mu-radio>
-              </mu-flex>
-            </div>
+            <div
+              v-if="!(item.achieve === undefined || item.achieve)"
+              class="question-required-prompt"
+            >请选择选项</div>
           </div>
-          <div v-else-if="item.type === 'multiple'">
-            <div class="question-title">
-              <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
-              {{index + 1}}、{{item.question}}
-              <span class="multiple-prompt">「多选题」</span>
-            </div>
-            <div class="select-control-group">
-              <!-- Selects: {{checkbox.value1}} -->
-              <!-- <mu-flex class="select-control-row">
+
+          <div
+            v-else-if="item.type === 'multiple'"
+            :id="gernerateId(item.id)"
+            class="question-item"
+            @click="setRequiredOption(item.id)"
+          >
+            <div
+              :class="(item.achieve === undefined || item.achieve) ? '':'question-required-border'"
+            >
+              <div class="question-title">
+                <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
+                {{index + 1}}、{{item.question}}
+                <span class="multiple-prompt">「多选题」</span>
+              </div>
+              <div class="select-control-group">
+                <!-- Selects: {{checkbox.value1}} -->
+                <!-- <mu-flex class="select-control-row">
               <mu-checkbox
                 label="全选"
                 :input-value="checkAll"
                 @change="handleCheckAll"
                 :checked-icon="this.checkbox.value1.length < 3 ? 'indeterminate_check_box' : undefined"
               ></mu-checkbox>
-              </mu-flex>-->
-              <mu-flex class="select-control-row" v-for="element in item.content" :key="element.id">
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <mu-checkbox
-                  :value="element.id"
-                  v-model="item.result"
-                  :label="element.text"
-                  class="checkbox-color"
-                ></mu-checkbox>
-              </mu-flex>
+                </mu-flex>-->
+                <mu-flex
+                  class="select-control-row"
+                  v-for="element in item.content"
+                  :key="element.id"
+                >
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <mu-checkbox
+                    :value="element.id"
+                    v-model="item.result"
+                    :label="element.text"
+                    class="checkbox-color"
+                  ></mu-checkbox>
+                </mu-flex>
+              </div>
             </div>
+            <div
+              v-if="!(item.achieve === undefined || item.achieve)"
+              class="question-required-prompt"
+            >请选择选项</div>
           </div>
-          <div v-else-if="item.type === 'shortAnswer'">
-            <div class="question-title">
-              <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
-              {{index + 1}}、{{item.question}}
+          <div
+            v-else-if="item.type === 'shortAnswer'"
+            :id="gernerateId(item.id)"
+            class="question-item"
+            @click="setRequiredOption(item.id)"
+          >
+            <div
+              :class="(item.achieve === undefined || item.achieve) ? '':'question-required-border'"
+            >
+              <div class="question-title">
+                <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
+                {{index + 1}}、{{item.question}}
+              </div>
+              <mu-text-field
+                class="shortAnswer-textArea"
+                v-model="item.result"
+                placeholder="最多可以输入140个文字"
+                multi-line
+                full-width
+                :rows="3"
+                :rows-max="6"
+                :max-length="140"
+                :solo="true"
+              ></mu-text-field>
             </div>
-            <mu-text-field
-              class="shortAnswer-textArea"
-              v-model="item.result"
-              placeholder="最多可以输入140个文字"
-              multi-line
-              full-width
-              :rows="3"
-              :rows-max="6"
-              :max-length="140"
-              :solo="true"
-            ></mu-text-field>
-            <!-- help-text="sadasd" -->
+            <div
+              v-if="!(item.achieve === undefined || item.achieve)"
+              class="question-required-prompt"
+            >请填写内容</div>
           </div>
         </mu-container>
       </div>
@@ -100,26 +148,70 @@ export default {
   components: { Toast },
   data() {
     return {
-      data: {},
-      radio: {
-        value1: [],
-        value2: "heart",
-        value3: "disable"
-      },
-      checkbox: {
-        value1: [],
-        value2: false,
-        value3: false
-      },
-      value9: ""
+      data: {}
     };
   },
   methods: {
     submitQuestion() {
-      // console.log(this.data.questions);
       this.data.questions.map(item => {
-        console.log(typeof item.result, item.result);
+        if (item.required && !item.result.length) {
+          item.achieve = false;
+          item.question = item.question + " ";
+          // document.documentElement.scrollTop =
+          //   document.getElementById(`question${item.id}`).offsetTop -
+          //   document.getElementById(`question${item.id}`).offsetHeight;
+          // document
+          //   .getElementById(`question${item.id}`)
+          //   .scrollIntoView(true, { behavior: "smooth", block: "center" });
+          // throw new Error("有必答题没有作答");
+        } else {
+          item.achieve = true;
+          item.question = item.question.trim();
+        }
       });
+
+      try {
+        this.data.questions.map(item => {
+          if (item.required && !item.result.length) {
+            // PC使用这一行
+            document.documentElement.scrollTop =
+              document.getElementById(`question${item.id}`).offsetTop -
+              document.getElementById(`question${item.id}`).offsetHeight;
+            //移动端使用这行代码
+            document.body.scrollTop =
+              document.getElementById(`question${item.id}`).offsetTop -
+              document.getElementById(`question${item.id}`).offsetHeight;
+            throw new Error("有必答题没有作答");
+          }
+        });
+      } catch (error) {
+        // console.log("hah ");
+      }
+    },
+    scroll() {
+      // console.log(window.scrollY,"测试");
+    },
+    //id拼接函数
+    gernerateId(id) {
+      return `question${id}`;
+    },
+    //设置必填选项 ，根据用户的点击事件，判断当前题目是否为必填题目及是否已经被填写
+    setRequiredOption(id) {
+      try {
+        this.data.questions.map(item => {
+          if (item.id === id && item.required && item.result.length) {
+            item.achieve = true;
+            throw new Error("当前项已被填写");
+          } else if (
+            item.id === id &&
+            item.required &&
+            item.type === "shortAnswer"
+          ) {
+            item.achieve = true;
+            throw new Error("当前项已被填写");
+          }
+        });
+      } catch (error) {}
     }
   },
   mounted: function() {
@@ -143,8 +235,7 @@ export default {
       //     _this.show9 = false;
       //   }
       // });
-
-      console.log(response);
+      // console.log(response);
       if (response === undefined) {
         this.$vux.toast.show({
           text: "获取数据失败",
@@ -160,7 +251,7 @@ export default {
         item.result = [];
       });
       this.data = response;
-      console.log(this.data);
+      // console.log(this.data);
     });
   }
 };
@@ -186,9 +277,12 @@ export default {
 .select-control-row {
   padding: 8px 0;
 }
+.question-required-border {
+  border: 1px dotted #f00;
+}
 .select-control-group {
   // margin-top: 16px;
-  padding-bottom: 8px;
+  // padding-bottom: 8px;
   color: #93919252;
 }
 .checkbox-color {
@@ -228,10 +322,16 @@ export default {
 .question-required {
   color: red;
 }
+.question-required-prompt {
+  color: red;
+  padding: 8px 0 0 22px;
+  font-size: 16px;
+}
+
 .question-title {
   color: #3b3b3b;
   font-size: 16px;
-  padding: 12px 0;
+  padding-top: 8px;
   font-weight: bolder;
 }
 .shortAnswer-textArea {

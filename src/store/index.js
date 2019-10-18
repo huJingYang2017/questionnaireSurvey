@@ -8,7 +8,14 @@ const store = new Vuex.Store({
     count: 12138,
     nowTabs: '',
     token: "",
-    userInfo: {}
+    userInfo: {},
+    indexPageScrollEvent: {
+      "scrollTop": 0,//页面滚动的高度
+      "mountedEnd": false,//是否为重新加载页面
+      "getDataNum": 0,//页面获取的数据数量
+      "searchString": ''//用户搜索的文字
+    }
+
   },
   mutations: {
     addNum(state) {
@@ -24,7 +31,19 @@ const store = new Vuex.Store({
     SET_USERINFO(state, userInfo) {
       sessionStorage.setItem("userId", userInfo.id);
       state.userInfo = userInfo;
-    }
+    },
+    SET_INDEX_SCROLL_EVENT_SCROOLTOP(state, scrollTop) {
+      state.indexPageScrollEvent.scrollTop = scrollTop;
+    },
+    SET_INDEX_SCROLL_EVENT_MOUNTEDEND(state, mountedEnd) {
+      state.indexPageScrollEvent.mountedEnd = mountedEnd;
+    },
+    SET_INDEX_SCROLL_EVENT_GETDATANUM(state, getDataNum) {
+      state.indexPageScrollEvent.getDataNum = getDataNum;
+    },
+    SET_INDEX_SCROLL_EVENT_SEARCHSTRING(state, searchString) {
+      state.indexPageScrollEvent.searchString = searchString;
+    },
   }
 })
 
