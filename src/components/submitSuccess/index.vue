@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="item">
-      <img src="../../assets/images/icon/404.svg" alt />
-      <p>抱歉，您访问的页面不存在</p>
+      <img src="../../assets/images/icon/ionc-submit-success.svg" alt width="50%" />
+      <p>问卷提交成功</p>
       <mu-container class="button-wrapper">
-        <mu-button color="primary" @click="back">返回上一页</mu-button>
+        <mu-button color="primary" @click="back" class="button-back">返回列表</mu-button>
       </mu-container>
     </div>
   </div>
@@ -28,19 +28,27 @@ export default {
   height: 100vh;
 }
 .item {
-  margin-top: 8vh;
+  margin-top: 30vh;
+  text-align: center;
 }
 .item img {
-  width: 90vw;
+  width: 16vw;
 }
 .item p {
   text-align: center;
   margin: 4vh 0;
   font-size: 16px;
+  font-weight: bolder;
 }
 .button-wrapper {
   text-align: center;
   height: 50px;
+  margin-top: 20vh;
+}
+.button-back {
+  width: 50vw;
+  height: 48px;
+  border-radius: 8px;
 }
 </style>
 

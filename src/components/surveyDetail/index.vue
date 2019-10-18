@@ -8,26 +8,159 @@
       <div class="questionnaire-dateTime">{{data.dateTime}}</div>
       <div class="questionnaire-none">当前问卷还没有问题</div>
     </div>
-    <div class="question-survey" v-for="(item,index) in data.questions" :key="index">
-      <div v-if="index === 0">
-        <div class="questionnaire-title">{{data.title}}</div>
-        <div class="questionnaire-dateTime">{{data.dateTime}}</div>
-      </div>
-      <div style="padding-bottom: 8px;">
-        <mu-container style="padding-top: 8px;">
-          <!-- :id=`questio${data.dateTime}` -->
-          <div
-            v-if="item.type === 'radio'"
-            :id="gernerateId(item.id)"
-            class="question-item"
-            @click="setRequiredOption(item.id)"
-          >
+    <!-- 未作答的页面 -->
+    <div v-if="!data.status">
+      <div class="question-survey" v-for="(item,index) in data.questions" :key="index">
+        <div v-if="index === 0">
+          <div class="questionnaire-title">{{data.title}}</div>
+          <div class="questionnaire-dateTime">{{data.dateTime}}</div>
+        </div>
+        <div style="padding-bottom: 8px;">
+          <mu-container style="padding-top: 8px;">
+            <!-- :id=`questio${data.dateTime}` -->
             <div
-              :class="(item.achieve === undefined || item.achieve) ? '':'question-required-border'"
+              v-if="item.type === 'radio'"
+              :id="gernerateId(item.id)"
+              class="question-item"
+              @click="setRequiredOption(item.id)"
             >
+              <div
+                :class="(item.achieve === undefined || item.achieve) ? '':'question-required-border'"
+              >
+                <div class="question-title">
+                  <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
+                  {{index + 1}}、{{item.question}}
+                </div>
+                <div class="select-control-group">
+                  <mu-flex
+                    class="select-control-row"
+                    v-for="element in item.content"
+                    :key="element.id"
+                  >
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <mu-radio
+                      :value="element.id"
+                      v-model="item.result"
+                      :label="element.text"
+                      class="radio-color"
+                    ></mu-radio>
+                  </mu-flex>
+                </div>
+              </div>
+              <div
+                v-if="!(item.achieve === undefined || item.achieve)"
+                class="question-required-prompt"
+              >请选择选项</div>
+            </div>
+
+            <div
+              v-else-if="item.type === 'multiple'"
+              :id="gernerateId(item.id)"
+              class="question-item"
+              @click="setRequiredOption(item.id)"
+            >
+              <div
+                :class="(item.achieve === undefined || item.achieve) ? '':'question-required-border'"
+              >
+                <div class="question-title">
+                  <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
+                  {{index + 1}}、{{item.question}}
+                  <span
+                    class="multiple-prompt"
+                  >「多选题」</span>
+                </div>
+                <div class="select-control-group">
+                  <!-- Selects: {{checkbox.value1}} -->
+                  <!-- <mu-flex class="select-control-row">
+              <mu-checkbox
+                label="全选"
+                :input-value="checkAll"
+                @change="handleCheckAll"
+                :checked-icon="this.checkbox.value1.length < 3 ? 'indeterminate_check_box' : undefined"
+              ></mu-checkbox>
+                  </mu-flex>-->
+                  <mu-flex
+                    class="select-control-row"
+                    v-for="element in item.content"
+                    :key="element.id"
+                  >
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <mu-checkbox
+                      :value="element.id"
+                      v-model="item.result"
+                      :label="element.text"
+                      class="checkbox-color"
+                    ></mu-checkbox>
+                  </mu-flex>
+                </div>
+              </div>
+              <div
+                v-if="!(item.achieve === undefined || item.achieve)"
+                class="question-required-prompt"
+              >请选择选项</div>
+            </div>
+            <div
+              v-else-if="item.type === 'shortAnswer'"
+              :id="gernerateId(item.id)"
+              class="question-item"
+              @click="setRequiredOption(item.id)"
+            >
+              <div
+                :class="(item.achieve === undefined || item.achieve) ? '':'question-required-border'"
+              >
+                <div class="question-title">
+                  <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
+                  {{index + 1}}、{{item.question}}
+                </div>
+                <mu-text-field
+                  class="shortAnswer-textArea"
+                  v-model="item.result"
+                  placeholder="最多可以输入140个文字"
+                  multi-line
+                  full-width
+                  :rows="3"
+                  :rows-max="6"
+                  :max-length="140"
+                  :solo="true"
+                ></mu-text-field>
+              </div>
+              <div
+                v-if="!(item.achieve === undefined || item.achieve)"
+                class="question-required-prompt"
+              >请填写内容</div>
+            </div>
+          </mu-container>
+        </div>
+
+        <div v-if="index === (data.questions.length -1)" class="bottom-btn" @click="submitVerify">
+          <div>
+            <mu-container class="button-wrapper">
+              <mu-flex justify-content="center" align-items="center">
+                <mu-button full-width color="primary">提交</mu-button>
+              </mu-flex>
+            </mu-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 已作答的页面 -->
+    <div v-else>
+      <div class="question-survey" v-for="(item,index) in data.questions" :key="index">
+        <div v-if="index === 0">
+          <div class="questionnaire-title">{{data.title}}</div>
+          <div class="questionnaire-dateTime">{{data.dateTime}}</div>
+        </div>
+        <div style="padding-bottom: 8px;">
+          <mu-container style="padding-top: 8px;">
+            <!-- :id=`questio${data.dateTime}` -->
+            <div v-if="item.type === 'radio'" :id="gernerateId(item.id)" class="question-item">
               <div class="question-title">
                 <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
                 {{index + 1}}、{{item.question}}
+                <span
+                  class="multiple-prompt"
+                  v-if="!item.result.length"
+                >「未作答」</span>
               </div>
               <div class="select-control-group">
                 <mu-flex
@@ -41,40 +174,24 @@
                     v-model="item.result"
                     :label="element.text"
                     class="radio-color"
+                    disabled
                   ></mu-radio>
                 </mu-flex>
               </div>
             </div>
-            <div
-              v-if="!(item.achieve === undefined || item.achieve)"
-              class="question-required-prompt"
-            >请选择选项</div>
-          </div>
 
-          <div
-            v-else-if="item.type === 'multiple'"
-            :id="gernerateId(item.id)"
-            class="question-item"
-            @click="setRequiredOption(item.id)"
-          >
             <div
-              :class="(item.achieve === undefined || item.achieve) ? '':'question-required-border'"
+              v-else-if="item.type === 'multiple'"
+              :id="gernerateId(item.id)"
+              class="question-item"
             >
               <div class="question-title">
                 <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
                 {{index + 1}}、{{item.question}}
                 <span class="multiple-prompt">「多选题」</span>
+                <span class="multiple-prompt" v-if="!item.result.length">「未作答」</span>
               </div>
-              <div class="select-control-group">
-                <!-- Selects: {{checkbox.value1}} -->
-                <!-- <mu-flex class="select-control-row">
-              <mu-checkbox
-                label="全选"
-                :input-value="checkAll"
-                @change="handleCheckAll"
-                :checked-icon="this.checkbox.value1.length < 3 ? 'indeterminate_check_box' : undefined"
-              ></mu-checkbox>
-                </mu-flex>-->
+              <div>
                 <mu-flex
                   class="select-control-row"
                   v-for="element in item.content"
@@ -86,27 +203,23 @@
                     v-model="item.result"
                     :label="element.text"
                     class="checkbox-color"
+                    disabled
                   ></mu-checkbox>
                 </mu-flex>
               </div>
             </div>
             <div
-              v-if="!(item.achieve === undefined || item.achieve)"
-              class="question-required-prompt"
-            >请选择选项</div>
-          </div>
-          <div
-            v-else-if="item.type === 'shortAnswer'"
-            :id="gernerateId(item.id)"
-            class="question-item"
-            @click="setRequiredOption(item.id)"
-          >
-            <div
-              :class="(item.achieve === undefined || item.achieve) ? '':'question-required-border'"
+              v-else-if="item.type === 'shortAnswer'"
+              :id="gernerateId(item.id)"
+              class="question-item"
             >
               <div class="question-title">
                 <span class="question-required">{{item.required ? '&nbsp;*' : '&nbsp;&nbsp;' }}</span>
                 {{index + 1}}、{{item.question}}
+                <span
+                  class="multiple-prompt"
+                  v-if="!item.result.length"
+                >「未作答」</span>
               </div>
               <mu-text-field
                 class="shortAnswer-textArea"
@@ -116,24 +229,10 @@
                 full-width
                 :rows="3"
                 :rows-max="6"
-                :max-length="140"
                 :solo="true"
+                disabled
               ></mu-text-field>
             </div>
-            <div
-              v-if="!(item.achieve === undefined || item.achieve)"
-              class="question-required-prompt"
-            >请填写内容</div>
-          </div>
-        </mu-container>
-      </div>
-
-      <div v-if="index === (data.questions.length -1)" class="bottom-btn" @click="submitQuestion">
-        <div>
-          <mu-container class="button-wrapper">
-            <mu-flex justify-content="center" align-items="center">
-              <mu-button full-width color="primary">提交</mu-button>
-            </mu-flex>
           </mu-container>
         </div>
       </div>
@@ -148,11 +247,24 @@ export default {
   components: { Toast },
   data() {
     return {
-      data: {}
+      data: {},
+      clickLimit: {
+        timeout: 300
+      } //加入按钮限制快速点击 函数防抖
     };
   },
   methods: {
+    submitVerify() {
+      if (this.clickLimit.timer) clearTimeout(this.clickLimit.timer);
+
+      this.clickLimit.timer = setTimeout(() => {
+        this.submitQuestion();
+      }, this.clickLimit.timeout);
+    },
+
     submitQuestion() {
+      //是否跳转
+      let isSkip = true;
       this.data.questions.map(item => {
         if (item.required && !item.result.length) {
           item.achieve = false;
@@ -171,8 +283,10 @@ export default {
       });
 
       try {
+
         this.data.questions.map(item => {
           if (item.required && !item.result.length) {
+
             // PC使用这一行
             document.documentElement.scrollTop =
               document.getElementById(`question${item.id}`).offsetTop -
@@ -185,7 +299,14 @@ export default {
           }
         });
       } catch (error) {
-        // console.log("hah ");
+        isSkip = false;
+      }
+      //若果用户问卷填写没有问题，怎进行跳转并讲数据提交 显示loadding
+      /********************************************/////////////////// */
+      if (isSkip) {
+        this.$router.replace({
+          name: "submitSuccess"
+        });
       }
     },
     scroll() {
@@ -246,12 +367,15 @@ export default {
         });
         return false;
       }
+      //status true-已答， false-未答
+      if (!response.status) {
+        response.questions.map(item => {
+          item.result = [];
+        });
+      }
 
-      response.questions.map(item => {
-        item.result = [];
-      });
       this.data = response;
-      // console.log(this.data);
+      console.log(this.data);
     });
   }
 };

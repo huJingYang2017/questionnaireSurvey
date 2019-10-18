@@ -45,6 +45,11 @@ const router = new Router({
       }
     },
     {
+      name: 'submitSuccess',
+      path: '/submitSuccess',
+      component: resolve => require(['components/submitSuccess'], resolve),
+    },
+    {
       name: '404',
       path: '/404',
       component: resolve => require(['components/notFound/404'], resolve),
